@@ -1,0 +1,41 @@
+require:
+  - rubocop-performance
+  - rubocop-rspec
+
+Layout/LineLength:
+  Max: 100
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+Layout/FirstArgumentIndentation:
+  EnforcedStyle: consistent
+Layout/FirstParameterIndentation:
+  EnforcedStyle: consistent
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+Layout/MultilineArrayBraceLayout:
+  EnforcedStyle: new_line
+Layout/MultilineHashBraceLayout:
+  EnforcedStyle: new_line
+
+Metrics/BlockLength:
+  Exclude:
+    - '*.gemspec'
+    - spec/**/*.rb
+
+AllCops:
+  TargetRubyVersion: 2.4
+  NewCops: enable
+
+RSpec/NestedGroups:
+  Enabled: false
+## https://github.com/rubocop-hq/rubocop-rspec/pull/863/files#r471603667
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
