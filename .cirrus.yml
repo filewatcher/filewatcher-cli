@@ -28,7 +28,7 @@ remark_task:
 rubocop_task:
   container:
     image: ruby:latest
-  <<: *bundle_cache
+  <<: *unix_bundle_cache
 
   lint_script: toys rubocop --format=json --out=rubocop.json
 
