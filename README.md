@@ -143,6 +143,15 @@ EVENT              Event type. Is either 'updated', 'deleted' or 'created'.
 DIRNAME            Absolute directory name.
 ```
 
+### Enable plugins
+
+When you use Filewatcher via CLI, you can enable plugins for it via `--plugins/-p` option:
+
+```sh
+# Require `spinner` plugin and then enable a spinner via new option from this plugin
+$ filewatcher -p spinner --spinner '**/*'
+```
+
 ## Development
 
 After checking out the repo, run `bundle install` to install dependencies.
