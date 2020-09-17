@@ -1,4 +1,4 @@
-bundle_cache: &bundle_cache
+unix_bundle_cache: &unix_bundle_cache
   bundle_cache:
     folder: /usr/local/bundle
     fingerprint_script:
@@ -6,9 +6,6 @@ bundle_cache: &bundle_cache
       - ruby -v
       - cat Gemfile
       - cat *.gemspec
-  install_script:
-    - gem install bundler
-    - bundle update
 
 remark_task:
   container:
@@ -60,7 +57,7 @@ test_task:
           image: ruby:2.6
           image: ruby:2.7
           image: jruby:latest
-      <<: *bundle_cache
+      <<: *unix_bundle_cache
       install_script:
         ## For `ps`: https://cirrus-ci.com/task/4518391826612224
         - apt-get update && apt-get install -y procps
@@ -71,7 +68,7 @@ test_task:
         image: catalina-base
       env:
         PATH: "/usr/local/opt/ruby/bin:$PATH"
-      <<: *bundle_cache
+      <<: *unix_bundle_cache
       install_script:
         - ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         - brew install ruby
