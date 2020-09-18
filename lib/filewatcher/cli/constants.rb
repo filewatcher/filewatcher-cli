@@ -4,6 +4,6 @@ class Filewatcher
   module CLI
     BINDIR = 'exe'
 
-    VERSION = '0.0.0'
+    VERSION = '1.0.0.beta1'
   end
 end
