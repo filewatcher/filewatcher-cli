@@ -36,7 +36,7 @@ rubocop_task:
     - gem install bundler
     - bundle update
 
-  lint_script: toys rubocop --format=json --out=rubocop.json
+  lint_script: bundle exec rubocop --format=json --out=rubocop.json
 
   always:
     rubocop_artifacts:
@@ -92,7 +92,7 @@ test_task:
   environment:
     CODECOV_TOKEN: ENCRYPTED[869e9cfd7cb2d72fcb71dea54ec91d980dd310402946a7b88ea01b2be6b87641b0d938e094431a181602b27594b1790b]
 
-  test_script: toys rspec --format=json --out=rspec.json
+  test_script: bundle exec rspec --format=json --out=rspec.json
 
   always:
     rspec_artifacts:
