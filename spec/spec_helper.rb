@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-require 'pry-byebug'
+begin
+  require 'pry-byebug'
+rescue LoadError
+  nil
+end
 
 require 'simplecov'
 SimpleCov.start
