@@ -6,6 +6,8 @@ class Filewatcher
   module CLI
     module SpecHelper
       class ShellWatchRun < Filewatcher::SpecHelper::WatchRun
+        include CLI::SpecHelper
+
         executable_path = File.realpath "#{__dir__}/../../../../#{CLI::BINDIR}/filewatcher"
         EXECUTABLE = "#{'ruby ' if Gem.win_platform?}#{executable_path}" \
 
