@@ -164,7 +164,6 @@ describe Filewatcher::CLI do
     let(:dumper_args) { [restart_signal] }
 
     before do
-      stub_const 'RESTART_SIGNAL', restart_signal
       watch_run.run(make_changes_times: 2)
     end
 
