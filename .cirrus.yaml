@@ -92,7 +92,7 @@ test_task:
         - bundle update
 
   environment:
-    CODECOV_TOKEN: ENCRYPTED[869e9cfd7cb2d72fcb71dea54ec91d980dd310402946a7b88ea01b2be6b87641b0d938e094431a181602b27594b1790b]
+    CODECOV_TOKEN: ENCRYPTED[4f101bf6510c6017e53621ce5c1437056c0ae7a2bfe63429a8ce87481ab4d1e519ffe155fe250b7f349ed3a0300e6847]
 
   test_script: bundle exec rspec
 
