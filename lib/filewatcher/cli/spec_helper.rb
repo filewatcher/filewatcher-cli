@@ -12,7 +12,9 @@ class Filewatcher
         super.merge(
           ## https://cirrus-ci.com/build/6442339705028608
           lambda do
-            RUBY_PLATFORM == 'java' && ENV['CI'] && is_a?(Filewatcher::Spec::ShellWatchRun)
+            RUBY_PLATFORM == 'java' &&
+              ENV['CI'] &&
+              is_a?(Filewatcher::CLI::SpecHelper::ShellWatchRun)
           end => 2
         )
       end

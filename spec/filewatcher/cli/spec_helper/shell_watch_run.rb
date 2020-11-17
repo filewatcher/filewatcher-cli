@@ -6,6 +6,8 @@ class Filewatcher
   module CLI
     module SpecHelper
       class ShellWatchRun < Filewatcher::SpecHelper::WatchRun
+        include CLI::SpecHelper
+
         executable_path = File.realpath "#{__dir__}/../../../../#{CLI::BINDIR}/filewatcher"
         EXECUTABLE = "#{'ruby ' if Gem.win_platform?}#{executable_path}" \
 
@@ -71,7 +73,9 @@ class Filewatcher
         def make_changes
           super
 
-          wait seconds: 1 do
+          wait seconds: 1
+
+          wait do
             debug "#{__method__}: File.exist?(DUMP_FILE) = #{File.exist?(DUMP_FILE)}"
             File.exist?(DUMP_FILE)
           end
