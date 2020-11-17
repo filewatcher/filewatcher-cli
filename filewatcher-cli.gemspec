@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.bindir = Filewatcher::CLI::BINDIR
   spec.executables << 'filewatcher'
 
-  spec.required_ruby_version = '>= 2.4'
+  spec.required_ruby_version = '~> 2.5'
 
   spec.add_runtime_dependency 'clamp', '~> 1.3'
   spec.add_runtime_dependency 'filewatcher', '~> 2.0.0.beta2'
@@ -43,7 +43,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'codecov', '~> 0.2.1'
   spec.add_development_dependency 'rspec', '~> 3.9'
-  spec.add_development_dependency 'simplecov', '~> 0.18.0'
+  spec.add_development_dependency 'simplecov', '~> 0.19.1'
 
   spec.add_development_dependency 'rubocop', '~> 1.3'
   spec.add_development_dependency 'rubocop-performance', '~> 1.0'
