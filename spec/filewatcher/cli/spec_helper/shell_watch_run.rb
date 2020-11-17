@@ -73,7 +73,9 @@ class Filewatcher
         def make_changes
           super
 
-          wait seconds: 1 do
+          wait seconds: 1
+
+          wait do
             debug "#{__method__}: File.exist?(DUMP_FILE) = #{File.exist?(DUMP_FILE)}"
             File.exist?(DUMP_FILE)
           end
