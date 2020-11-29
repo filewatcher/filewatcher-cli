@@ -22,6 +22,12 @@ class Filewatcher
 
       parameter '[COMMAND]', 'shell command to execute when file changes'
 
+      option ['-v', '--version'], :flag, 'Print versions' do
+        Filewatcher.print_version
+        puts "Filewatcher CLI #{Filewatcher::CLI::VERSION}"
+        exit 0
+      end
+
       def execute
         @child_pid = nil
 
