@@ -30,7 +30,7 @@ class Filewatcher
         default: File.join('**', '*')
 
       option '--exclude', 'GLOB', 'exclude file(s) matching', default: nil do |string|
-        split_files_void_escaped_whitespace string.split(' ') unless string.to_s.empty?
+        split_files_void_escaped_whitespace string.split unless string.to_s.empty?
       end
 
       option %w[-i --interval], 'SECONDS', 'interval to scan file system', default: 0.5 do |string|
