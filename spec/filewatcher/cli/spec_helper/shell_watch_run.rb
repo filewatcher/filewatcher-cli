@@ -32,8 +32,9 @@ class Filewatcher
 
           wait do
             debug "pid state = #{pid_state}"
-            debug "#{__method__}: File.exist?(DUMP_FILE) = #{File.exist?(DUMP_FILE)}"
-            pid_state == 'S' && (!@options[:immediate] || File.exist?(DUMP_FILE))
+            dump_file_exists = File.exist?(DUMP_FILE)
+            debug "#{__method__}: File.exist?(DUMP_FILE) = #{dump_file_exists}"
+            pid_state == 'S' && (!@options[:immediate] || dump_file_exists)
           end
         end
 
@@ -76,8 +77,10 @@ class Filewatcher
           wait seconds: 1
 
           wait do
-            debug "#{__method__}: File.exist?(DUMP_FILE) = #{File.exist?(DUMP_FILE)}"
-            File.exist?(DUMP_FILE)
+            dump_file_exists = File.exist?(DUMP_FILE)
+            debug "#{__method__}: File.exist?(DUMP_FILE) = #{dump_file_exists}"
+            debug "#{__method__}: DUMP_FILE content = #{File.read(DUMP_FILE)}" if dump_file_exists
+            dump_file_exists
           end
         end
 
