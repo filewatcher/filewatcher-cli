@@ -28,7 +28,7 @@ class Filewatcher
 
           spawn_filewatcher
 
-          wait seconds: 1
+          wait seconds: 3
 
           wait do
             debug "pid state = #{pid_state}"
