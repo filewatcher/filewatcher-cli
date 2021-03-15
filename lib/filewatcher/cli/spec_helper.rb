@@ -12,12 +12,13 @@ class Filewatcher
 
       def environment_specs_coefficients
         @environment_specs_coefficients ||= super.merge(
-          ## https://cirrus-ci.com/build/6442339705028608
+          ## There was `2` because of https://cirrus-ci.com/build/6442339705028608
+          ## Left for possible problems in the future
           lambda do
             RUBY_PLATFORM == 'java' &&
               ENV['CI'] &&
               is_a?(Filewatcher::CLI::SpecHelper::ShellWatchRun)
-          end => 2
+          end => 1
         )
       end
     end
