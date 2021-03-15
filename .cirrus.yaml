@@ -73,6 +73,8 @@ test_task:
         - apt-get update && apt-get install -y procps
         ## For `git`: https://cirrus-ci.com/task/6460602732249088?command=test#L880
         - apt-get install -y git
+        ## For `stat`: https://cirrus-ci.com/task/5372401216126976?command=test#L79
+        - apt-get install -y stat
         - gem install bundler
         - bundle update
 
