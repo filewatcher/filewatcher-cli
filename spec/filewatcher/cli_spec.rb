@@ -117,7 +117,6 @@ describe Filewatcher::CLI do
     before do
       watch_run.start
       watch_run.stop
-      Filewatcher::SpecHelper.wait
     end
   end
 
