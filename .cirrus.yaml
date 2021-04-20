@@ -94,8 +94,11 @@ test_task:
       <<: *unix_bundle_cache
 
       install_script:
-        - ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-        - brew install ruby
+        ## Brew is pre-installed, as described in the CI docs:
+        ## https://cirrus-ci.org/guide/macOS/#list-of-available-images
+        # - ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        # - brew install ruby
+
         ## https://github.com/rubygems/rubygems/issues/2058#issuecomment-342347290
         - gem install bundler --force
         - bundle update
