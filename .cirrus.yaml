@@ -1,11 +1,15 @@
 unix_bundle_cache: &unix_bundle_cache
   bundle_cache:
-    folder: /usr/local/bundle
+    folder: vendor/bundle
     fingerprint_script:
       - echo $CIRRUS_OS
       - ruby -v
       - cat Gemfile
       - cat *.gemspec
+  bundle_install_script:
+    ## Fix Bundle cache in CI for macOS
+    - bundle config set --local path 'vendor/bundle'
+    - bundle update
 
 env:
   ## To suppress flood of warnings:
@@ -39,11 +43,10 @@ rubocop_task:
   container:
     image: ruby:latest
 
-  <<: *unix_bundle_cache
-
-  install_script:
+  os_prepare_script:
     - gem install bundler
-    - bundle update
+
+  <<: *unix_bundle_cache
 
   lint_script: bundle exec rubocop --format=json --out=rubocop.json
 
@@ -75,15 +78,14 @@ test_task:
           image: ruby:3.0
           image: jruby:latest
 
-      <<: *unix_bundle_cache
-
-      install_script:
+      os_prepare_script:
         ## For `ps`: https://cirrus-ci.com/task/4518391826612224
         - apt-get update && apt-get install -y procps
         ## For `git`: https://cirrus-ci.com/task/6460602732249088?command=test#L880
         - apt-get install -y git
         - gem install bundler
-        - bundle update
+
+      <<: *unix_bundle_cache
 
     - macos_instance:
         image: big-sur-base
@@ -91,9 +93,7 @@ test_task:
       env:
         PATH: "/usr/local/opt/ruby/bin:$PATH"
 
-      <<: *unix_bundle_cache
-
-      install_script:
+      os_prepare_script:
         ## Brew is pre-installed, as described in the CI docs:
         ## https://cirrus-ci.org/guide/macOS/#list-of-available-images
         # - ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -101,7 +101,8 @@ test_task:
 
         ## https://github.com/rubygems/rubygems/issues/2058#issuecomment-342347290
         - gem install bundler --force
-        - bundle update
+
+      <<: *unix_bundle_cache
 
   environment:
     CODECOV_TOKEN: ENCRYPTED[4f101bf6510c6017e53621ce5c1437056c0ae7a2bfe63429a8ce87481ab4d1e519ffe155fe250b7f349ed3a0300e6847]
