@@ -31,10 +31,10 @@ class Filewatcher
           wait seconds: 3
 
           wait seconds: 3 do
-            debug "pid state = #{pid_state}"
+            debug "pid state = #{pid_state.inspect}"
             dump_file_exists = File.exist?(DUMP_FILE)
             debug "#{__method__}: File.exist?(DUMP_FILE) = #{dump_file_exists}"
-            pid_state == 'S' && (!@options[:immediate] || dump_file_exists)
+            pid_ready? && (!@options[:immediate] || dump_file_exists)
           end
 
           ## Dump file can exists with `--immediate` option, but Filewatcher can not have time
@@ -46,7 +46,7 @@ class Filewatcher
           kill_filewatcher
 
           wait do
-            pid_state.empty?
+            pid_state.nil?
           end
 
           super
@@ -89,7 +89,7 @@ class Filewatcher
         end
 
         def kill_filewatcher
-          debug __method__
+          # debug __method__
           if Gem.win_platform?
             Process.kill('KILL', @pid)
           else
@@ -98,13 +98,33 @@ class Filewatcher
             Process.kill('TERM', -Process.getpgid(@pid))
             Process.waitall
           end
+        rescue Errno::ESRCH
+          nil ## already killed
+        ensure
           wait
         end
 
         def pid_state
-          ## For macOS output:
-          ## https://travis-ci.org/thomasfl/filewatcher/jobs/304433538
-          `ps -ho state -p #{@pid}`.sub('STAT', '').strip
+          if Gem.win_platform?
+            match = `tasklist /FI "PID eq #{@pid}" /FO "LIST" /V`.match(/Status:\s+(\w+)/)
+            return unless match
+
+            match[1]
+          else
+            ## For macOS output:
+            ## https://travis-ci.org/thomasfl/filewatcher/jobs/304433538
+            state = `ps -ho state -p #{@pid}`.sub('STAT', '').strip
+            ## Return `nil` for consistency with Windows
+            state.empty? ? nil : state
+          end
+        end
+
+        def pid_ready?
+          ps = pid_state
+
+          return if ps.nil?
+
+          ps == (Gem.win_platform? ? 'Running' : 'S')
         end
 
         def wait(seconds: 1)

@@ -104,6 +104,48 @@ test_task:
 
       <<: *unix_bundle_cache
 
+    - windows_container:
+        image: cirrusci/windowsservercore:2019
+      env:
+        ## It's better to pre-define here instead of `refreshenv`:
+        ## https://cirrus-ci.org/guide/windows/#environment-variables
+        RUBY_PATH: C:\tools\ruby
+        PATH: $RUBY_PATH\bin;$PATH
+
+      ruby_cache:
+        folder: $RUBY_PATH
+        fingerprint_script:
+          - echo $CIRRUS_OS
+          ## `--limit-output` to try rid off extra information and avoid cache miss:
+          ## https://cirrus-ci.com/task/5913496480120832?logs=ruby#L11-L13
+          - choco search --exact "ruby" --limit-output
+        populate_script:
+          ## Cirrus CI has Chocolatey pre-installed 😍:
+          ## https://cirrus-ci.org/guide/windows/#chocolatey
+
+          ## Install the latest Ruby with Chocolatey: https://community.chocolatey.org/packages/ruby
+          ## But I don't know what to do with cache and new versions (`upgrade`?)
+          - choco install ruby -y --no-progress --params "/NoPath /InstallDir:%RUBY_PATH%"
+
+          - gem install bundler
+
+          ## For `pry-byebug`:
+          ## https://cirrus-ci.com/task/5906822973358080?logs=bundle_install#L15
+          ## I didn't find how to install without dialog, so I'm going to just disable
+          ## this dependency for Windows as well as for JRuby.
+          # - ridk install
+
+      bundle_cache:
+        folder: vendor\bundle
+        fingerprint_script:
+          - echo %CIRRUS_OS%
+          - ruby -v
+          - type Gemfile
+          - type *.gemspec
+      bundle_install_script:
+        - bundle config set --local path 'vendor/bundle'
+        - bundle update
+
   environment:
     CODECOV_TOKEN: ENCRYPTED[4f101bf6510c6017e53621ce5c1437056c0ae7a2bfe63429a8ce87481ab4d1e519ffe155fe250b7f349ed3a0300e6847]
 

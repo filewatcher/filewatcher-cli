@@ -112,6 +112,10 @@ via `--restart-signal` option:
 $ filewatcher --restart --restart-signal=KILL "**/*.rb" "rake test"
 ```
 
+Due to [problems with signals on Windows](https://bugs.ruby-lang.org/issues/17820),
+the default value of restart signal is `KILL` on Windows (while on Unix-like is `TERM`),
+which is a single one supported at the current moment, so use other values carefully.
+
 The `--immediate/-I` option starts the command on startup without waiting for file system updates. To start a web server and have it automatically restart when HTML files are updated:
 
 ```sh
