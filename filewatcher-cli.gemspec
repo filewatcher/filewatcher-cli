@@ -35,7 +35,11 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'clamp', '~> 1.3'
   spec.add_runtime_dependency 'filewatcher', '~> 2.0.0.beta5'
 
-  spec.add_development_dependency 'pry-byebug', '~> 3.9' unless RUBY_PLATFORM == 'java'
+  ## Windows requires some additional installations:
+  ## https://cirrus-ci.com/task/5906822973358080?logs=bundle_install#L15
+  unless RUBY_PLATFORM == 'java' || Gem.win_platform?
+    spec.add_development_dependency 'pry-byebug', '~> 3.9'
+  end
 
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'gem_toys', '~> 0.8.0'

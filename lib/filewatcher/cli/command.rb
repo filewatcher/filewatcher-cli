@@ -99,9 +99,22 @@ class Filewatcher
         end
       end
 
+      WINDOWS_SIGNALS_WARNING = <<~WARN
+        WARNING: Signals don't work on Windows properly: https://bugs.ruby-lang.org/issues/17820
+        It's recommended to use only the `KILL` (default `restart-signal` on Windows).
+      WARN
+      private_constant :WINDOWS_SIGNALS_WARNING
+
       def restart(pid, restart_signal, env, command)
         begin
           raise Errno::ESRCH unless pid
+
+          ## Signals don't work on Windows for some reason:
+          ## https://cirrus-ci.com/task/5706760947236864?logs=test#L346
+          ## https://bugs.ruby-lang.org/issues/17820
+          ## https://blog.simplificator.com/2016/01/18/how-to-kill-processes-on-windows-using-ruby/
+          ## But `KILL` works.
+          warn WINDOWS_SIGNALS_WARNING if Gem.win_platform? && restart_signal != 'KILL'
 
           Process.kill(restart_signal, pid)
           Process.wait(pid)

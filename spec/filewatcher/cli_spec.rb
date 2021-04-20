@@ -171,13 +171,20 @@ describe Filewatcher::CLI do
       let(:expected_dump_file_content) { restart_signal }
 
       context 'with default value' do
-        let(:restart_signal) { 'TERM' }
+        let(:restart_signal) { Gem.win_platform? ? 'KILL' : 'TERM' }
         let(:options) { { restart: true } }
         let(:expected_dump_file_existence) { true }
 
-        include_examples 'dump file existence'
+        if Gem.win_platform?
+          pending <<~TEXT
+            We can't trap `KILL` signal in the `signal_dumper.rb` on Windows:
+            https://bugs.ruby-lang.org/issues/17820
+          TEXT
+        else
+          include_examples 'dump file existence'
 
-        include_examples 'dump file content'
+          include_examples 'dump file content'
+        end
       end
 
       context 'with custom value' do
@@ -185,9 +192,16 @@ describe Filewatcher::CLI do
         let(:options) { { restart: true, 'restart-signal' => restart_signal } }
         let(:expected_dump_file_existence) { true }
 
-        include_examples 'dump file existence'
+        if Gem.win_platform?
+          pending <<~TEXT
+            We can't send non-`KILL` signal to the spawned process on Windows:
+            https://bugs.ruby-lang.org/issues/17820
+          TEXT
+        else
+          include_examples 'dump file existence'
 
-        include_examples 'dump file content'
+          include_examples 'dump file content'
+        end
       end
     end
   end

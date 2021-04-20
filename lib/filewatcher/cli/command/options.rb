@@ -17,8 +17,10 @@ class Filewatcher
       option %w[-r --restart --fork], :flag, 'restart process when file system is updated',
         default: false
 
+      ## Signal don't work on Windows for some reason:
+      ## https://bugs.ruby-lang.org/issues/17820
       option '--restart-signal', 'VALUE', 'termination signal for `restart` option',
-        default: 'TERM'
+        default: Gem.win_platform? ? 'KILL' : 'TERM'
 
       option %w[-l --list], :flag, 'print name of files being watched',
         default: false
