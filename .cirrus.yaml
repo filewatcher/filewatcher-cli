@@ -85,8 +85,8 @@ test_task:
         - gem install bundler
         - bundle update
 
-    - osx_instance:
-        image: catalina-base
+    - macos_instance:
+        image: big-sur-base
 
       env:
         PATH: "/usr/local/opt/ruby/bin:$PATH"
