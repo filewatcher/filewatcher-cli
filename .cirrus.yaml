@@ -97,8 +97,6 @@ test_task:
       os_prepare_script:
         ## For `ps`: https://cirrus-ci.com/task/4518391826612224
         - apt-get update && apt-get install -y procps
-        ## For `git`: https://cirrus-ci.com/task/6460602732249088?command=test#L880
-        - apt-get install -y git
         - gem install bundler
 
       <<: *unix_bundle_cache
