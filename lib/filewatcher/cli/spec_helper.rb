@@ -9,13 +9,10 @@ class Filewatcher
       include Filewatcher::SpecHelper
 
       ENVIRONMENT_SPECS_COEFFICIENTS = {
-        ## There was `2` because of https://cirrus-ci.com/build/6442339705028608
-        ## Left for possible problems in the future
         lambda do
           RUBY_ENGINE == 'jruby' &&
-            ENV['CI'] &&
             is_a?(Filewatcher::CLI::SpecHelper::ShellWatchRun)
-        end => 1
+        end => 2
       }.freeze
 
       def environment_specs_coefficients
