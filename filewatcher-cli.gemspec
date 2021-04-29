@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.5', '< 4'
 
   spec.add_runtime_dependency 'clamp', '~> 1.3'
-  spec.add_runtime_dependency 'filewatcher', '~> 2.0.0.beta3'
+  spec.add_runtime_dependency 'filewatcher', '~> 2.0.0.beta5'
 
   spec.add_development_dependency 'pry-byebug', '~> 3.9' unless RUBY_PLATFORM == 'java'
 

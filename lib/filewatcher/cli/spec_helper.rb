@@ -6,21 +6,26 @@ class Filewatcher
   module CLI
     ## Helper for CLI specs
     module SpecHelper
-      extend Filewatcher::SpecHelper
+      include Filewatcher::SpecHelper
 
-      module_function
+      ENVIRONMENT_SPECS_COEFFICIENTS = {
+        ## There was `2` because of https://cirrus-ci.com/build/6442339705028608
+        ## Left for possible problems in the future
+        lambda do
+          RUBY_ENGINE == 'jruby' &&
+            ENV['CI'] &&
+            is_a?(Filewatcher::CLI::SpecHelper::ShellWatchRun)
+        end => 1
+      }.freeze
 
       def environment_specs_coefficients
-        @environment_specs_coefficients ||= super.merge(
-          ## There was `2` because of https://cirrus-ci.com/build/6442339705028608
-          ## Left for possible problems in the future
-          lambda do
-            RUBY_PLATFORM == 'java' &&
-              ENV['CI'] &&
-              is_a?(Filewatcher::CLI::SpecHelper::ShellWatchRun)
-          end => 1
-        )
+        @environment_specs_coefficients ||= super.merge ENVIRONMENT_SPECS_COEFFICIENTS
       end
+
+      ## https://github.com/rubocop/ruby-style-guide/issues/556#issuecomment-828672008
+      # rubocop:disable Style/ModuleFunction
+      extend self
+      # rubocop:enable Style/ModuleFunction
     end
   end
 end
