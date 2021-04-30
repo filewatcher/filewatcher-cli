@@ -22,7 +22,7 @@ class Filewatcher
           RUBY_ENGINE == 'truffleruby' &&
             ENV['CI'] &&
             is_a?(Filewatcher::CLI::SpecHelper::ShellWatchRun)
-        end => 2
+        end => 3
       }.freeze
 
       def environment_specs_coefficients
