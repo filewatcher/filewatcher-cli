@@ -36,6 +36,10 @@ class Filewatcher
             debug "#{__method__}: File.exist?(DUMP_FILE) = #{dump_file_exists}"
             pid_state == 'S' && (!@options[:immediate] || dump_file_exists)
           end
+
+          ## Dump file can exists with `--immediate` option, but Filewatcher can not have time
+          ## to initialize `@last_snapshot` in main cycle.
+          wait
         end
 
         def stop
