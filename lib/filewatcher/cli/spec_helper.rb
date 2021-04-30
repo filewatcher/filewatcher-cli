@@ -11,6 +11,12 @@ class Filewatcher
       ENVIRONMENT_SPECS_COEFFICIENTS = {
         lambda do
           RUBY_ENGINE == 'jruby' &&
+            # ENV['CI'] &&
+            is_a?(Filewatcher::CLI::SpecHelper::ShellWatchRun)
+        end => 2,
+        lambda do
+          RUBY_ENGINE == 'truffleruby' &&
+            # ENV['CI'] &&
             is_a?(Filewatcher::CLI::SpecHelper::ShellWatchRun)
         end => 2
       }.freeze
