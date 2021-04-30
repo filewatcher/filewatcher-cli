@@ -28,7 +28,7 @@ class Filewatcher
 
           spawn_filewatcher
 
-          wait seconds: 3
+          wait
 
           wait seconds: 3 do
             debug "pid state = #{pid_state.inspect}"
@@ -78,9 +78,7 @@ class Filewatcher
         def make_changes
           super
 
-          wait seconds: 1
-
-          wait do
+          wait seconds: 3 do
             dump_file_exists = File.exist?(DUMP_FILE)
             debug "#{__method__}: File.exist?(DUMP_FILE) = #{dump_file_exists}"
             debug "#{__method__}: DUMP_FILE content = #{File.read(DUMP_FILE)}" if dump_file_exists
