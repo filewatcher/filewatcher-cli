@@ -101,6 +101,15 @@ test_task:
 
       <<: *unix_bundle_cache
 
+    - container:
+        image: ghcr.io/graalvm/truffleruby:latest
+      os_prepare_script:
+        ## For `ps`: https://cirrus-ci.com/task/4518391826612224
+        ## For `gem install`: https://github.com/graalvm/container/issues/9
+        - microdnf install -y glibc-langpack-en procps
+        - gem install bundler
+      <<: *unix_bundle_cache
+
     - macos_instance:
         image: big-sur-base
 

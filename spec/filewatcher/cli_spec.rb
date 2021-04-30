@@ -12,7 +12,7 @@ describe Filewatcher::CLI do
     logger.debug "FileUtils.rm_r #{tmp_dir}"
     FileUtils.rm_r tmp_dir
 
-    Filewatcher::SpecHelper.wait seconds: 5, interval: 0.2 do
+    Filewatcher::CLI::SpecHelper.wait seconds: 5, interval: 0.2 do
       !File.exist?(tmp_dir)
     end
   end

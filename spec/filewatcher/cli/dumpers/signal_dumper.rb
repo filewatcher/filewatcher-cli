@@ -8,4 +8,4 @@ Signal.trap(signal) do
   exit
 end
 
-Filewatcher::SpecHelper.wait seconds: 60
+Filewatcher::CLI::SpecHelper.wait seconds: 60
