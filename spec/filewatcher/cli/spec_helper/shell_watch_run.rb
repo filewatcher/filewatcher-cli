@@ -30,7 +30,7 @@ class Filewatcher
 
           wait seconds: 3
 
-          wait do
+          wait seconds: 3 do
             debug "pid state = #{pid_state}"
             dump_file_exists = File.exist?(DUMP_FILE)
             debug "#{__method__}: File.exist?(DUMP_FILE) = #{dump_file_exists}"
