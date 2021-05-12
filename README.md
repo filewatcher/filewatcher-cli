@@ -6,7 +6,7 @@
 [![Depfu](https://img.shields.io/depfu/filewatcher/filewatcher-cli?style=flat-square)](https://depfu.com/repos/github/filewatcher/filewatcher-cli)
 [![Inline docs](https://inch-ci.org/github/filewatcher/filewatcher-cli.svg?branch=master)](https://inch-ci.org/github/filewatcher/filewatcher-cli)
 [![License](https://img.shields.io/github/license/filewatcher/filewatcher-cli.svg?style=flat-square)](LICENSE.txt)
-[![Gem](https://img.shields.io/gem/v/filewatcher-cli.svg?style=flat-square)](https://rubygems.org/gems/filewatcher-cli)
+[![Gem](https://img.shields.io/gem/v/filewatcher-cli.svg?include_prereleases&style=flat-square)](https://rubygems.org/gems/filewatcher-cli)
 
 CLI for [Filewatcher](https://github.com/filewatcher/filewatcher).
 
