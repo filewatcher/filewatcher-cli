@@ -42,7 +42,7 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'bundler-audit', '~> 0.8.0'
+  spec.add_development_dependency 'bundler-audit', '~> 0.9.0'
 
   spec.add_development_dependency 'gem_toys', '~> 0.9.0'
   spec.add_development_dependency 'toys', '~> 0.12.1'
