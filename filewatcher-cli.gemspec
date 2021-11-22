@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.metadata['homepage_uri'] = spec.homepage
 
   spec.metadata['changelog_uri'] =
-    'https://github.com/filewatcher/filewatcher-cli/blob/master/CHANGELOG.md'
+    'https://github.com/filewatcher/filewatcher-cli/blob/main/CHANGELOG.md'
 
   spec.files = Dir['{exe,lib}/**/*.{rb,txt}', 'README.md', 'LICENSE.txt', 'CHANGELOG.md']
 
