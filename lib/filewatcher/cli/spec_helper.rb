@@ -15,12 +15,12 @@ class Filewatcher
         end => 2,
         lambda do
           RUBY_ENGINE == 'jruby' &&
-            ENV['CI'] &&
+            ENV.fetch('CI', false) &&
             is_a?(Filewatcher::CLI::SpecHelper::ShellWatchRun)
         end => 1.5,
         lambda do
           RUBY_ENGINE == 'truffleruby' &&
-            ENV['CI'] &&
+            ENV.fetch('CI', false) &&
             is_a?(Filewatcher::CLI::SpecHelper::ShellWatchRun)
         end => 3
       }.freeze
