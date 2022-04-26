@@ -48,9 +48,9 @@ class Filewatcher
         @filewatcher = Filewatcher.new(
           files,
           ## https://github.com/mdub/clamp/issues/105
-          self.class.declared_options.map do |option|
+          self.class.declared_options.to_h do |option|
             [option.attribute_name.to_sym, public_send(option.read_method)]
-          end.to_h
+          end
         )
       end
 
