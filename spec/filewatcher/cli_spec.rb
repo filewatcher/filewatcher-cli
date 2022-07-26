@@ -19,7 +19,6 @@ describe Filewatcher::CLI do
 
   let(:filename) { 'tmp_file.txt' }
   let(:action) { :update }
-  let(:directory) { false }
 
   let(:shell_watch_run_class) { Filewatcher::CLI::SpecHelper::ShellWatchRun }
   let(:tmp_dir) { shell_watch_run_class::TMP_DIR }
@@ -33,7 +32,6 @@ describe Filewatcher::CLI do
     shell_watch_run_class.new(
       filename: filename,
       action: action,
-      directory: directory,
       dumper: dumper,
       options: options,
       dumper_args: dumper_args

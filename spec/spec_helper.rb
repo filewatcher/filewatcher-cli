@@ -12,6 +12,3 @@ end
 
 require_relative '../lib/filewatcher/cli'
 require_relative '../lib/filewatcher/cli/spec_helper'
-
-require_relative 'filewatcher/cli/spec_helper/shell_watch_run'
-require_relative 'filewatcher/cli/spec_helper/dump_to_file'

@@ -2,4 +2,4 @@
 
 require 'filewatcher'
 
-require_relative 'cli/constants'
+require_relative 'cli/command'

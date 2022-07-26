@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-require_relative '../../../../lib/filewatcher/cli/spec_helper'
+require 'filewatcher/spec_helper'
 
 class Filewatcher
   module CLI
     module SpecHelper
-      class ShellWatchRun < Filewatcher::SpecHelper::WatchRun
+      class ShellWatchRun
+        include Filewatcher::SpecHelper::WatchRun
         include CLI::SpecHelper
 
         executable_path = File.realpath "#{__dir__}/../../../../#{CLI::BINDIR}/filewatcher"
@@ -64,7 +65,7 @@ class Filewatcher
         SPAWN_OPTIONS = Gem.win_platform? ? {} : { pgroup: true }
 
         def spawn_filewatcher
-          dumper_full_command = "#{__dir__}/../dumpers/#{@dumper}_dumper.rb #{@dumper_args}"
+          dumper_full_command = "#{__dir__}/dumpers/#{@dumper}_dumper.rb #{@dumper_args}"
           spawn_command =
             "#{EXECUTABLE} #{options_string} \"#{@filename}\" \"ruby #{dumper_full_command}\""
           debug "spawn_command = #{spawn_command}"
