@@ -2,6 +2,8 @@
 
 require 'filewatcher/spec_helper'
 
+require_relative '../constants'
+
 class Filewatcher
   module CLI
     module SpecHelper
