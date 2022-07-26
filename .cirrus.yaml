@@ -83,6 +83,7 @@ test_task:
 
   depends_on:
     - remark
+    - bundle-audit
     - rubocop
 
   matrix:
