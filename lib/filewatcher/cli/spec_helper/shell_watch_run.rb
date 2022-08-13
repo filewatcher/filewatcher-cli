@@ -7,6 +7,7 @@ require_relative '../constants'
 class Filewatcher
   module CLI
     module SpecHelper
+      ## Runner for Shell tests
       class ShellWatchRun
         include Filewatcher::SpecHelper::WatchRun
         include CLI::SpecHelper
