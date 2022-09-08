@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'filewatcher/spec_helper'
+
 require_relative 'spec_helper/dump_to_file'
 
 class Filewatcher

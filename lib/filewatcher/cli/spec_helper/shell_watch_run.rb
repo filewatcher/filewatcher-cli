@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require 'filewatcher/spec_helper'
-
 require_relative '../constants'
+require_relative '../spec_helper'
 
 class Filewatcher
   module CLI
