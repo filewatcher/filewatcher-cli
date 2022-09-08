@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.6', '< 4'
 
   spec.add_runtime_dependency 'clamp', '~> 1.3'
-  spec.add_runtime_dependency 'filewatcher', '~> 2.0.0.beta5'
+  spec.add_runtime_dependency 'filewatcher', '~> 2.0'
 
   ## Windows requires some additional installations:
   ## https://cirrus-ci.com/task/5906822973358080?logs=bundle_install#L15
