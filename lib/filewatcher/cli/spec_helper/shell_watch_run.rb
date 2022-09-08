@@ -6,6 +6,7 @@ require_relative '../spec_helper'
 class Filewatcher
   module CLI
     module SpecHelper
+      ## Watch runner for calls from shell
       class ShellWatchRun
         include Filewatcher::SpecHelper::WatchRun
         include CLI::SpecHelper
