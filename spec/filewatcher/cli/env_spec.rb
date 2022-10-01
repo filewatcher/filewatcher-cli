@@ -15,7 +15,7 @@ describe Filewatcher::CLI::Env do
   describe '#to_h' do
     subject { super().to_h }
 
-    it { is_expected.to be_kind_of Hash }
+    it { is_expected.to be_a Hash }
 
     describe '#[]' do
       subject { super()[key] }
