@@ -81,11 +81,6 @@ rubocop_task:
 test_task:
   name: Test on $CIRRUS_OS
 
-  depends_on:
-    - remark
-    - bundle-audit
-    - rubocop
-
   matrix:
     - container:
         matrix:
