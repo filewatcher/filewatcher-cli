@@ -2,6 +2,7 @@
 
 require 'fileutils'
 require_relative '../../lib/filewatcher/cli'
+require_relative '../../lib/filewatcher/cli/spec_helper/shell_watch_run'
 
 describe Filewatcher::CLI do
   before do
@@ -17,12 +18,30 @@ describe Filewatcher::CLI do
     end
   end
 
-  let(:filename) { 'tmp_file.txt' }
-  let(:action) { :update }
+  def transform_spec_files(file)
+    shell_watch_run_class.transform_spec_files(file)
+  end
 
   let(:shell_watch_run_class) { Filewatcher::CLI::SpecHelper::ShellWatchRun }
   let(:tmp_dir) { shell_watch_run_class::TMP_DIR }
+  let(:tmp_files_dir) { shell_watch_run_class::TMP_FILES_DIR }
   let(:logger) { Filewatcher::SpecHelper.logger }
+
+  let(:raw_file_name) { 'tmp_file.txt' }
+  let(:initial_files) { { raw_file_name => {} } }
+
+  let(:changes) do
+    files = Array(initial_files.keys)
+    files << raw_file_name if files.empty?
+    files.to_h do |file|
+      [transform_spec_files(file), { event: change_event, directory: change_directory }]
+    end
+  end
+
+  let(:change_event) { :update }
+  let(:change_directory) { false }
+
+  let(:watch_path) { "#{tmp_files_dir}/**/*" }
 
   let(:null_output) { Gem.win_platform? ? 'NUL' : '/dev/null' }
   let(:dumper) { :watched }
@@ -30,8 +49,9 @@ describe Filewatcher::CLI do
   let(:options) { {} }
   let(:watch_run) do
     shell_watch_run_class.new(
-      filename: filename,
-      action: action,
+      watch_path,
+      initial_files: initial_files,
+      changes: changes,
       dumper: dumper,
       options: options,
       dumper_args: dumper_args
@@ -65,7 +85,6 @@ describe Filewatcher::CLI do
   end
 
   describe 'ENV variables' do
-    let(:filename) { 'foo.txt' }
     let(:dumper) { :env }
 
     before do
@@ -73,17 +92,18 @@ describe Filewatcher::CLI do
     end
 
     context 'when file created' do
-      let(:action) { :create }
+      let(:initial_files) { {} }
+      let(:change_event) { :create }
 
       let(:expected_dump_file_content) do
-        %W[
-          #{tmp_dir}/#{filename}
-          #{filename}
-          created
-          #{tmp_dir}
-          #{tmp_dir}/#{filename}
-          spec/tmp/#{filename}
-        ].join(', ')
+        [
+          transform_spec_files(raw_file_name),
+          raw_file_name,
+          'created',
+          transform_spec_files(nil),
+          transform_spec_files(raw_file_name),
+          "#{tmp_files_dir}/#{raw_file_name}"
+        ].join("\n")
       end
 
       include_examples 'dump file existence'
@@ -92,17 +112,17 @@ describe Filewatcher::CLI do
     end
 
     context 'when file deleted' do
-      let(:action) { :delete }
+      let(:change_event) { :delete }
 
       let(:expected_dump_file_content) do
-        %W[
-          #{tmp_dir}/#{filename}
-          #{filename}
-          deleted
-          #{tmp_dir}
-          #{tmp_dir}/#{filename}
-          spec/tmp/#{filename}
-        ].join(', ')
+        [
+          transform_spec_files(raw_file_name),
+          raw_file_name,
+          'deleted',
+          transform_spec_files(nil),
+          transform_spec_files(raw_file_name),
+          "#{tmp_files_dir}/#{raw_file_name}"
+        ].join("\n")
       end
 
       include_examples 'dump file existence'

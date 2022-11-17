@@ -16,8 +16,10 @@ class Filewatcher
 
         DUMP_FILE = File.join(TMP_DIR, 'dump')
 
-        def initialize(options:, dumper:, dumper_args:, **rest_args)
+        def initialize(watch_path, options:, dumper:, dumper_args:, **rest_args)
           super(**rest_args)
+
+          @watch_path = watch_path
           @options = options
           @options[:interval] ||= 0.2
           debug "options = #{options_string}"
@@ -69,7 +71,7 @@ class Filewatcher
         def spawn_filewatcher
           dumper_full_command = "#{__dir__}/dumpers/#{@dumper}_dumper.rb #{@dumper_args}"
           spawn_command =
-            "#{EXECUTABLE} #{options_string} \"#{@filename}\" \"ruby #{dumper_full_command}\""
+            "#{EXECUTABLE} #{options_string} \"#{@watch_path}\" \"ruby #{dumper_full_command}\""
           debug "spawn_command = #{spawn_command}"
           @pid = spawn spawn_command, **SPAWN_OPTIONS
 
@@ -90,13 +92,15 @@ class Filewatcher
         end
 
         def kill_filewatcher
-          # debug __method__
+          debug __method__
           if Gem.win_platform?
             Process.kill('KILL', @pid)
           else
             ## Problems: https://github.com/thomasfl/filewatcher/pull/83
             ## Solution: https://stackoverflow.com/a/45032252/2630849
+            debug 'Process TERM'
             Process.kill('TERM', -Process.getpgid(@pid))
+            debug 'Process waitall'
             Process.waitall
           end
         rescue Errno::ESRCH
