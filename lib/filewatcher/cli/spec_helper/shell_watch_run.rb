@@ -93,20 +93,25 @@ class Filewatcher
 
         def kill_filewatcher
           debug __method__
+
           if Gem.win_platform?
             Process.kill('KILL', @pid)
           else
-            ## Problems: https://github.com/thomasfl/filewatcher/pull/83
-            ## Solution: https://stackoverflow.com/a/45032252/2630849
-            debug 'Process KILL'
-            Process.kill('KILL', -Process.getpgid(@pid))
-            debug 'Process waitall'
-            Process.waitall
+            unix_kill_filewatcher
           end
         rescue Errno::ESRCH
           nil ## already killed
         ensure
           wait
+        end
+
+        def unix_kill_filewatcher
+          ## Problems: https://github.com/thomasfl/filewatcher/pull/83
+          ## Solution: https://stackoverflow.com/a/45032252/2630849
+          debug 'Process KILL'
+          Process.kill('KILL', -Process.getpgid(@pid))
+          debug 'Process waitall'
+          Process.waitall
         end
 
         def pid_state

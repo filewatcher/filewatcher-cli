@@ -155,7 +155,7 @@ describe Filewatcher::CLI do
         }
       end
 
-      context '`--every` option' do
+      context 'with `--every` option' do
         let(:options) { super().merge(every: true) }
 
         let(:expected_dump_file_content) do
