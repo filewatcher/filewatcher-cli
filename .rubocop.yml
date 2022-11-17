@@ -30,6 +30,9 @@ Layout/MultilineArrayBraceLayout:
 Layout/MultilineHashBraceLayout:
   EnforcedStyle: new_line
 
+Naming/VariableNumber:
+  EnforcedStyle: snake_case
+
 Metrics/BlockLength:
   Exclude:
     - '*.gemspec'

@@ -47,6 +47,9 @@ describe Filewatcher::CLI do
   let(:dumper) { :watched }
   let(:dumper_args) { [] }
   let(:options) { {} }
+
+  let(:make_changes_times) { 1 }
+
   let(:watch_run) do
     shell_watch_run_class.new(
       watch_path,
@@ -60,7 +63,7 @@ describe Filewatcher::CLI do
 
   let(:dump_file_content) { File.read(shell_watch_run_class::DUMP_FILE) }
   let(:expected_dump_file_existence) { true }
-  let(:expected_dump_file_content) { 'watched' }
+  let(:expected_dump_file_content) { "watched\n" * make_changes_times }
 
   shared_examples 'dump file existence' do
     describe 'file existence' do
@@ -102,7 +105,8 @@ describe Filewatcher::CLI do
           'created',
           transform_spec_files(nil),
           transform_spec_files(raw_file_name),
-          "#{tmp_files_dir}/#{raw_file_name}"
+          "#{tmp_files_dir}/#{raw_file_name}",
+          nil
         ].join("\n")
       end
 
@@ -121,13 +125,63 @@ describe Filewatcher::CLI do
           'deleted',
           transform_spec_files(nil),
           transform_spec_files(raw_file_name),
-          "#{tmp_files_dir}/#{raw_file_name}"
+          "#{tmp_files_dir}/#{raw_file_name}",
+          nil
         ].join("\n")
       end
 
       include_examples 'dump file existence'
 
       include_examples 'dump file content'
+    end
+
+    context 'with multiple paths to watch' do
+      let(:file_1) { 'tmp_file_1.txt' }
+      let(:subdir) { 'subdir' }
+      let(:file_2) { "#{subdir}/tmp_file_2.txt" }
+
+      let(:watch_path) { "#{tmp_files_dir}/#{file_1} #{tmp_files_dir}/#{subdir}" }
+
+      let(:initial_files) do
+        {
+          file_1 => {}
+        }
+      end
+
+      let(:changes) do
+        {
+          **initial_files.to_h { |key, _value| [transform_spec_files(key), { event: :update }] },
+          transform_spec_files(file_2) => { event: :create }
+        }
+      end
+
+      context '`--every` option' do
+        let(:options) { super().merge(every: true) }
+
+        let(:expected_dump_file_content) do
+          [
+            transform_spec_files(file_1),
+            file_1,
+            'updated',
+            transform_spec_files(nil),
+            transform_spec_files(file_1),
+            "#{tmp_files_dir}/#{file_1}",
+
+            transform_spec_files(file_2),
+            File.basename(file_2),
+            'created',
+            transform_spec_files(subdir),
+            transform_spec_files(file_2),
+            "#{tmp_files_dir}/#{file_2}",
+
+            nil
+          ].join("\n")
+        end
+
+        include_examples 'dump file existence'
+
+        include_examples 'dump file content'
+      end
     end
   end
 
@@ -160,8 +214,10 @@ describe Filewatcher::CLI do
   describe '`--restart` option' do
     let(:options) { { restart: true } }
 
+    let(:make_changes_times) { 2 }
+
     before do
-      watch_run.run(make_changes_times: 2)
+      watch_run.run(make_changes_times: make_changes_times)
     end
 
     shared_examples 'correct behavior' do
@@ -181,12 +237,14 @@ describe Filewatcher::CLI do
     let(:dumper) { :signal }
     let(:dumper_args) { [restart_signal] }
 
+    let(:make_changes_times) { 2 }
+
     before do
-      watch_run.run(make_changes_times: 2)
+      watch_run.run(make_changes_times: make_changes_times)
     end
 
     context 'with `--restart` option' do
-      let(:expected_dump_file_content) { restart_signal }
+      let(:expected_dump_file_content) { "#{restart_signal}\n" }
 
       context 'with default value' do
         let(:restart_signal) { Gem.win_platform? ? 'KILL' : 'TERM' }

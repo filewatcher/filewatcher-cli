@@ -83,7 +83,7 @@ class Filewatcher
         def make_changes
           super
 
-          wait seconds: 3 do
+          wait seconds: 3, interval: 0.5 do
             dump_file_exists = File.exist?(DUMP_FILE)
             debug "#{__method__}: File.exist?(DUMP_FILE) = #{dump_file_exists}"
             debug "#{__method__}: DUMP_FILE content = #{File.read(DUMP_FILE)}" if dump_file_exists
@@ -98,8 +98,8 @@ class Filewatcher
           else
             ## Problems: https://github.com/thomasfl/filewatcher/pull/83
             ## Solution: https://stackoverflow.com/a/45032252/2630849
-            debug 'Process TERM'
-            Process.kill('TERM', -Process.getpgid(@pid))
+            debug 'Process KILL'
+            Process.kill('KILL', -Process.getpgid(@pid))
             debug 'Process waitall'
             Process.waitall
           end
@@ -132,8 +132,8 @@ class Filewatcher
           ps == (Gem.win_platform? ? 'Running' : 'S')
         end
 
-        def wait(seconds: 1)
-          super seconds: seconds, interval: @options[:interval]
+        def wait(seconds: 1, interval: @options[:interval])
+          super seconds: seconds, interval: interval
         end
       end
     end

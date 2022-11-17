@@ -18,7 +18,9 @@ class Filewatcher
 
       require_relative 'command/options'
 
-      parameter 'FILES', 'file names to scan'
+      parameter 'FILES', 'file names to scan' do |string|
+        split_files_void_escaped_whitespace string.split unless string.to_s.empty?
+      end
 
       parameter '[COMMAND]', 'shell command to execute when file changes'
 
