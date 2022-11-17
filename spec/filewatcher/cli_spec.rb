@@ -149,10 +149,10 @@ describe Filewatcher::CLI do
       end
 
       let(:changes) do
-        {
-          **initial_files.to_h { |key, _value| [transform_spec_files(key), { event: :update }] },
-          transform_spec_files(file_2) => { event: :create }
-        }
+        initial_files.to_h { |key, _value| [transform_spec_files(key), { event: :update }] }
+          .merge(
+            transform_spec_files(file_2) => { event: :create }
+          )
       end
 
       context 'with `--every` option' do
