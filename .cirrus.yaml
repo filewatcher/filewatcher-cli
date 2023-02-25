@@ -11,6 +11,18 @@ unix_bundle_cache: &unix_bundle_cache
     - bundle config set --local path 'vendor/bundle'
     - bundle update
 
+unix_codecov: &unix_codecov
+  codecov_uploader_cache:
+    folder: codecov
+    fingerprint_script:
+      - curl -Os https://uploader.codecov.io/latest/${CODECOV_OS}/codecov.SHA256SUM
+    populate_script:
+      - mkdir -p codecov
+      - curl -s https://uploader.codecov.io/latest/${CODECOV_OS}/codecov -o codecov/uploader
+      - chmod +x codecov/uploader
+
+  codecov_script: codecov/uploader
+
 env:
   ## To suppress flood of warnings:
   ## https://github.com/cirruslabs/cirrus-ci-docs/issues/814
@@ -90,6 +102,9 @@ test_task:
           image: ruby:3.1
           image: jruby:latest
 
+      env:
+        CODECOV_OS: linux
+
       os_prepare_script:
         ## For `ps`: https://cirrus-ci.com/task/4518391826612224
         - apt-get update && apt-get install -y procps
@@ -97,20 +112,34 @@ test_task:
 
       <<: *unix_bundle_cache
 
+      test_script: bundle exec rspec
+
+      <<: *unix_codecov
+
     - container:
         image: ghcr.io/graalvm/truffleruby:latest
+
+      env:
+        CODECOV_OS: linux
+
       os_prepare_script:
         ## For `ps`: https://cirrus-ci.com/task/4518391826612224
         ## For `gem install`: https://github.com/graalvm/container/issues/9
         - dnf install -y glibc-langpack-en procps
         - gem install bundler
+
       <<: *unix_bundle_cache
+
+      test_script: bundle exec rspec
+
+      <<: *unix_codecov
 
     - macos_instance:
         image: big-sur-base
 
       env:
         PATH: "/usr/local/opt/ruby/bin:$PATH"
+        CODECOV_OS: macos
 
       os_prepare_script:
         ## Brew is pre-installed, as described in the CI docs:
@@ -123,19 +152,25 @@ test_task:
 
       <<: *unix_bundle_cache
 
+      test_script: bundle exec rspec
+
+      <<: *unix_codecov
+
     - windows_container:
         image: cirrusci/windowsservercore:2019
+
       env:
         ## It's better to pre-define here instead of `refreshenv`:
         ## https://cirrus-ci.org/guide/windows/#environment-variables
         RUBY_PATH: C:\tools\ruby
         MSYS2_PATH: C:\tools\msys2
         PATH: $MSYS2_PATH;$RUBY_PATH\bin;$PATH
+        CIRRUS_SHELL: powershell
 
       ruby_cache:
         folder: C:\tools
         fingerprint_script:
-          - echo $CIRRUS_OS
+          - echo $Env:CIRRUS_OS
           ## `--limit-output` to try rid off extra information and avoid cache miss:
           ## https://cirrus-ci.com/task/5913496480120832?logs=ruby#L11-L13
           - choco search --exact "ruby" --limit-output
@@ -144,11 +179,11 @@ test_task:
           ## https://cirrus-ci.org/guide/windows/#chocolatey
 
           ## https://community.chocolatey.org/packages/ruby#notes
-          - choco install msys2 -y --no-progress --params "/NoPath /InstallDir:%MSYS2_PATH%"
+          - choco install msys2 -y --no-progress --params "/NoPath /InstallDir:$Env:MSYS2_PATH"
 
           ## Install the latest Ruby with Chocolatey: https://community.chocolatey.org/packages/ruby
           ## But I don't know what to do with cache and new versions (`upgrade`?)
-          - choco install ruby -y --no-progress --params "/NoPath /InstallDir:%RUBY_PATH%"
+          - choco install ruby -y --no-progress --params "/NoPath /InstallDir:$Env:RUBY_PATH"
 
           ## ```
           ## Installing json 2.6.2 with native extensions
@@ -168,18 +203,26 @@ test_task:
       bundle_cache:
         folder: vendor\bundle
         fingerprint_script:
-          - echo %CIRRUS_OS%
+          - echo $Env:CIRRUS_OS
           - ruby -v
           - type Gemfile
           - type *.gemspec
+
       bundle_install_script:
         - bundle config set --local path 'vendor/bundle'
         - bundle update
 
-  environment:
-    CODECOV_TOKEN: ENCRYPTED[4f101bf6510c6017e53621ce5c1437056c0ae7a2bfe63429a8ce87481ab4d1e519ffe155fe250b7f349ed3a0300e6847]
+      test_script: bundle exec rspec
 
-  test_script: bundle exec rspec
+      codecov_uploader_cache:
+        folder: codecov
+        fingerprint_script:
+          - Invoke-WebRequest -UseBasicParsing -Uri https://uploader.codecov.io/latest/windows/codecov.exe.SHA256SUM
+        populate_script:
+          - mkdir -p codecov
+          - Invoke-WebRequest -UseBasicParsing -Uri https://uploader.codecov.io/latest/windows/codecov.exe -Outfile codecov/uploader.exe
+
+      codecov_script: .\codecov\uploader.exe
 
   only_if: ($CIRRUS_BRANCH == 'main') ||
     changesInclude(
