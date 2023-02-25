@@ -135,7 +135,7 @@ test_task:
       <<: *unix_codecov
 
     - macos_instance:
-        image: big-sur-base
+        image: ghcr.io/cirruslabs/macos-ventura-base:latest
 
       env:
         PATH: "/usr/local/opt/ruby/bin:$PATH"
@@ -154,7 +154,8 @@ test_task:
 
       test_script: bundle exec rspec
 
-      <<: *unix_codecov
+      ## https://github.com/codecov/uploader/issues/523#issuecomment-1318842102
+      # <<: *unix_codecov
 
     - windows_container:
         image: cirrusci/windowsservercore:2019
