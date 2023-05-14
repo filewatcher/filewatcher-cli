@@ -53,7 +53,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.21.2'
   spec.add_development_dependency 'simplecov-cobertura', '~> 2.1'
 
-  spec.add_development_dependency 'rubocop', '~> 1.49.0'
+  spec.add_development_dependency 'rubocop', '~> 1.51.0'
   spec.add_development_dependency 'rubocop-performance', '~> 1.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 2.19.0'
 end
