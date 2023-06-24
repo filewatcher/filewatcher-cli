@@ -136,22 +136,22 @@ describe Filewatcher::CLI do
     end
 
     context 'with multiple paths to watch' do
-      let(:file_1) { 'tmp_file_1.txt' }
+      let(:initial_file) { 'tmp_initial_file.txt' }
       let(:subdir) { 'subdir' }
-      let(:file_2) { "#{subdir}/tmp_file_2.txt" }
+      let(:new_file) { "#{subdir}/tmp_new_file.txt" }
 
-      let(:watch_path) { "#{tmp_files_dir}/#{file_1} #{tmp_files_dir}/#{subdir}" }
+      let(:watch_path) { "#{tmp_files_dir}/#{initial_file} #{tmp_files_dir}/#{subdir}" }
 
       let(:initial_files) do
         {
-          file_1 => {}
+          initial_file => {}
         }
       end
 
       let(:changes) do
         initial_files.to_h { |key, _value| [transform_spec_files(key), { event: :update }] }
           .merge(
-            transform_spec_files(file_2) => { event: :create }
+            transform_spec_files(new_file) => { event: :create }
           )
       end
 
@@ -160,19 +160,19 @@ describe Filewatcher::CLI do
 
         let(:expected_dump_file_content) do
           [
-            transform_spec_files(file_1),
-            file_1,
+            transform_spec_files(initial_file),
+            initial_file,
             'updated',
             transform_spec_files(nil),
-            transform_spec_files(file_1),
-            "#{tmp_files_dir}/#{file_1}",
+            transform_spec_files(initial_file),
+            "#{tmp_files_dir}/#{initial_file}",
 
-            transform_spec_files(file_2),
-            File.basename(file_2),
+            transform_spec_files(new_file),
+            File.basename(new_file),
             'created',
             transform_spec_files(subdir),
-            transform_spec_files(file_2),
-            "#{tmp_files_dir}/#{file_2}",
+            transform_spec_files(new_file),
+            "#{tmp_files_dir}/#{new_file}",
 
             nil
           ].join("\n")
