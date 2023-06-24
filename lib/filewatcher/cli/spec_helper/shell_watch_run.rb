@@ -132,7 +132,7 @@ class Filewatcher
         def pid_ready?
           ps = pid_state
 
-          return if ps.nil?
+          return false if ps.nil?
 
           ps == (Gem.win_platform? ? 'Running' : 'S')
         end

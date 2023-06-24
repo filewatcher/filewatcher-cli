@@ -66,7 +66,7 @@ class Filewatcher
 
       def watch
         @filewatcher.watch do |changes|
-          changes = every? ? changes : changes.first(1)
+          changes = changes.first(1) unless every?
 
           changes.each do |filename, event|
             command = command_for_file filename
