@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.bindir = Filewatcher::CLI::BINDIR
   spec.executables << 'filewatcher'
 
-  spec.required_ruby_version = '>= 2.7', '< 4'
+  spec.required_ruby_version = '>= 3.0', '< 4'
 
   spec.add_runtime_dependency 'clamp', '~> 1.3'
   spec.add_runtime_dependency 'filewatcher', '~> 2.1'
