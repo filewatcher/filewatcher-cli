@@ -138,7 +138,7 @@ class Filewatcher
         end
 
         def wait(seconds: 1, interval: @options[:interval])
-          super seconds: seconds, interval: interval
+          super(seconds: seconds, interval: interval)
         end
       end
     end
