@@ -79,13 +79,7 @@ rubocop_task:
 
   <<: *unix_bundle_cache
 
-  lint_script: bundle exec rubocop --format=json --out=rubocop.json
-
-  always:
-    rubocop_artifacts:
-      path: rubocop.json
-      type: text/json
-      format: rubocop
+  lint_script: bundle exec rubocop
 
   only_if: ($CIRRUS_BRANCH == 'main') ||
     changesInclude(
