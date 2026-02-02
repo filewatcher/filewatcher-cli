@@ -9,7 +9,7 @@ group :development do
   ## https://cirrus-ci.com/task/5906822973358080?logs=bundle_install#L15
   gem 'pry-byebug', '~> 3.9' unless RUBY_PLATFORM == 'java' || Gem.win_platform?
 
-  gem 'gem_toys', '~> 0.14.0'
+  gem 'gem_toys', '~> 1.0.2'
   gem 'toys', '~> 0.15.3'
 end
 
