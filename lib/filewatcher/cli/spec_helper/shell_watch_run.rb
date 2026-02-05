@@ -67,6 +67,7 @@ class Filewatcher
         end
 
         SPAWN_OPTIONS = Gem.win_platform? ? {} : { pgroup: true }
+        private_constant :SPAWN_OPTIONS
 
         def spawn_filewatcher
           dumper_full_command = "#{__dir__}/dumpers/#{@dumper}_dumper.rb #{@dumper_args}"
@@ -138,7 +139,7 @@ class Filewatcher
         end
 
         def wait(seconds: 1, interval: @options[:interval])
-          super(seconds: seconds, interval: interval)
+          super
         end
       end
     end

@@ -43,7 +43,7 @@ describe Filewatcher::CLI do
 
   let(:watch_path) { "#{tmp_files_dir}/**/*" }
 
-  let(:null_output) { Gem.win_platform? ? 'NUL' : '/dev/null' }
+  let(:null_output) { File::NULL }
   let(:dumper) { :watched }
   let(:dumper_args) { [] }
   let(:options) { {} }
@@ -61,23 +61,27 @@ describe Filewatcher::CLI do
     )
   end
 
-  let(:dump_file_content) { File.read(shell_watch_run_class::DUMP_FILE) }
-  let(:expected_dump_file_existence) { true }
   let(:expected_dump_file_content) { "watched\n" * make_changes_times }
 
-  shared_examples 'dump file existence' do
+  shared_examples 'creating dump file' do
     describe 'file existence' do
       subject { File.exist?(shell_watch_run_class::DUMP_FILE) }
 
-      it { is_expected.to be expected_dump_file_existence }
+      it { is_expected.to be true }
+    end
+
+    describe 'file content' do
+      subject { File.read(shell_watch_run_class::DUMP_FILE) }
+
+      it { is_expected.to eq expected_dump_file_content }
     end
   end
 
-  shared_examples 'dump file content' do
-    describe 'file content' do
-      subject { dump_file_content }
+  shared_examples 'not creating dump file' do
+    describe 'file existence' do
+      subject { File.exist?(shell_watch_run_class::DUMP_FILE) }
 
-      it { is_expected.to eq expected_dump_file_content }
+      it { is_expected.to be false }
     end
   end
 
@@ -110,9 +114,7 @@ describe Filewatcher::CLI do
         ].join("\n")
       end
 
-      include_examples 'dump file existence'
-
-      include_examples 'dump file content'
+      it_behaves_like 'creating dump file'
     end
 
     context 'when file deleted' do
@@ -130,9 +132,7 @@ describe Filewatcher::CLI do
         ].join("\n")
       end
 
-      include_examples 'dump file existence'
-
-      include_examples 'dump file content'
+      it_behaves_like 'creating dump file'
     end
 
     context 'with multiple paths to watch' do
@@ -178,9 +178,7 @@ describe Filewatcher::CLI do
           ].join("\n")
         end
 
-        include_examples 'dump file existence'
-
-        include_examples 'dump file content'
+        it_behaves_like 'creating dump file'
       end
     end
   end
@@ -197,18 +195,15 @@ describe Filewatcher::CLI do
 
     include_context 'when started and stopped'
 
-    include_examples 'dump file existence'
-
-    include_examples 'dump file content'
+    it_behaves_like 'creating dump file'
   end
 
   context 'without immediate option and changes' do
     let(:options) { {} }
-    let(:expected_dump_file_existence) { false }
 
     include_context 'when started and stopped'
 
-    include_examples 'dump file existence'
+    it_behaves_like 'not creating dump file'
   end
 
   describe '`--restart` option' do
@@ -220,16 +215,12 @@ describe Filewatcher::CLI do
       watch_run.run(make_changes_times: make_changes_times)
     end
 
-    shared_examples 'correct behavior' do
-      include_examples 'dump file existence'
-
-      include_examples 'dump file content'
-    end
-
-    include_examples 'correct behavior'
+    it_behaves_like 'creating dump file'
 
     describe '`--fork` alias' do
-      include_examples 'correct behavior'
+      let(:options) { { fork: true } }
+
+      it_behaves_like 'creating dump file'
     end
   end
 
@@ -249,7 +240,6 @@ describe Filewatcher::CLI do
       context 'with default value' do
         let(:restart_signal) { Gem.win_platform? ? 'KILL' : 'TERM' }
         let(:options) { { restart: true } }
-        let(:expected_dump_file_existence) { true }
 
         if Gem.win_platform?
           pending <<~TEXT
@@ -257,16 +247,13 @@ describe Filewatcher::CLI do
             https://bugs.ruby-lang.org/issues/17820
           TEXT
         else
-          include_examples 'dump file existence'
-
-          include_examples 'dump file content'
+          it_behaves_like 'creating dump file'
         end
       end
 
       context 'with custom value' do
         let(:restart_signal) { 'INT' }
         let(:options) { { restart: true, 'restart-signal' => restart_signal } }
-        let(:expected_dump_file_existence) { true }
 
         if Gem.win_platform?
           pending <<~TEXT
@@ -274,9 +261,7 @@ describe Filewatcher::CLI do
             https://bugs.ruby-lang.org/issues/17820
           TEXT
         else
-          include_examples 'dump file existence'
-
-          include_examples 'dump file content'
+          it_behaves_like 'creating dump file'
         end
       end
     end

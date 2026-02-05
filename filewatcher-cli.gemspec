@@ -34,6 +34,6 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 3.2', '< 4'
 
-  spec.add_runtime_dependency 'clamp', '~> 1.3'
-  spec.add_runtime_dependency 'filewatcher', '~> 3.0'
+  spec.add_dependency 'clamp', '~> 1.3'
+  spec.add_dependency 'filewatcher', '~> 3.0'
 end
