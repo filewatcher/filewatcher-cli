@@ -9,8 +9,8 @@ group :development do
   ## https://cirrus-ci.com/task/5906822973358080?logs=bundle_install#L15
   gem 'pry-byebug', '~> 3.9' unless RUBY_PLATFORM == 'java' || Gem.win_platform?
 
-  gem 'gem_toys', '~> 0.14.0'
-  gem 'toys', '~> 0.15.3'
+  gem 'gem_toys', '~> 1.0'
+  gem 'toys', '~> 0.19.1'
 end
 
 group :audit do
@@ -20,13 +20,13 @@ end
 group :test do
   gem 'rspec', '~> 3.9'
   gem 'simplecov', '~> 0.22.0'
-  gem 'simplecov-cobertura', '~> 2.1'
+  gem 'simplecov-cobertura', '~> 3.1'
 end
 
 group :lint do
-  gem 'rubocop', '~> 1.61.0'
-  gem 'rubocop-performance', '~> 1.0'
-  gem 'rubocop-rspec', '~> 2.26.1'
+  gem 'rubocop', '~> 1.84.0'
+  gem 'rubocop-performance', '~> 1.26.1'
+  gem 'rubocop-rspec', '~> 3.9.0'
 end
 
 # gem 'filewatcher', path: '../filewatcher'
