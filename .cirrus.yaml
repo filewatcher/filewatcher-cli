@@ -80,8 +80,7 @@ rubocop_task:
   lint_script: bundle exec rubocop
   only_if: ($CIRRUS_BRANCH == 'main') ||
     changesInclude(
-      '.cirrus.yaml', '.gitignore', 'Gemfile', 'Rakefile', '.rubocop.yml', '*.gemspec', '**.rb',
-      'bin/**'
+      '.cirrus.yaml', '.gitignore', 'Gemfile', '.rubocop.yml', '*.gemspec', '**.rb', 'exe/**'
     )
 
 test_mri_task:
